@@ -3,6 +3,9 @@ from flask_login import LoginManager, login_user, logout_user, login_required,cu
 from flask_bcrypt import Bcrypt
 from models import db,User
 from flask import session
+from utilis import requestod
+
+
 app = Flask(__name__)
 app.secret_key = 'key_sessione_user' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -35,7 +38,7 @@ def register():
         new_user = User(username=username, password=password_hash)
         db.session.add(new_user)
         db.session.commit()
-    
+        login_user(new_user)
         return redirect(url_for('home'))
     return render_template('login.html', error=None)
 
@@ -52,7 +55,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('home'))
-        return render_template('Login.html', error="Credenziali non valide.") 
+        else:
+            return render_template('Login.html', error="Credenziali non valide.") 
     return render_template('Login.html', error=None)
 
 #Home
@@ -60,8 +64,8 @@ def login():
 @app.route('/home')
 @login_required
 def home():
-
-    return render_template('index.html', username = current_user.username)
+    name = requestod()
+    return render_template('index.html', username = current_user.username, name = name)
 
 if __name__ == '__main__': 
     

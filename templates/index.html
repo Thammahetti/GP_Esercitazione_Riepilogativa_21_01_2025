@@ -4,4 +4,9 @@
 </head>
 <body>
     <h1>{{username}}</h1>
+    <ul>
+        {% for i in name %}
+            <li>{{ i.name }} is aboard the {{ i.craft }}</li>
+        {% endfor %}
+    </ul>
 </body>
